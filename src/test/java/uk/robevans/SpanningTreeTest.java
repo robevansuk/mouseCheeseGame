@@ -350,6 +350,56 @@ public class SpanningTreeTest {
         assertTrue(testObject.getBidirectionalEdgeMap().get(bottomLeftCornerPoint).containsKey(Direction.RIGHT));
     }
 
+    @Test
+    public void shouldAdd3EdgesForABottomEdgePoint() {
+        fillWeightsUpToBottomRow();
+        testObject.addBottomLeftCornerEdges(new Point(0, 4));
+        Point bottomPoint1 = new Point(1, 4);
+        Point bottomPoint2 = new Point(2, 4);
+        Point bottomPoint3 = new Point(3, 4);
+        testObject.addBottomEdges(bottomPoint1);
+        testObject.addBottomEdges(bottomPoint2);
+        testObject.addBottomEdges(bottomPoint3);
+
+        assertEquals(24, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(bottomPoint1).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(bottomPoint2).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(bottomPoint3).size());
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint1).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint1).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint1).containsKey(Direction.RIGHT));
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint2).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint2).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint2).containsKey(Direction.RIGHT));
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint3).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint3).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomPoint3).containsKey(Direction.RIGHT));
+    }
+
+    @Test
+    public void shouldAdd2EdgesForABottomRightCornerPoint() {
+        fillWeightsUpToBottomRow();
+        testObject.addBottomLeftCornerEdges(new Point(0, 4));
+        Point bottomPoint1 = new Point(1, 4);
+        Point bottomPoint2 = new Point(2, 4);
+        Point bottomPoint3 = new Point(3, 4);
+        testObject.addBottomEdges(bottomPoint1);
+        testObject.addBottomEdges(bottomPoint2);
+        testObject.addBottomEdges(bottomPoint3);
+
+        Point bottomRightCornerPoint = new Point(4, 4);
+        testObject.addBottomRightCornerEdges(bottomRightCornerPoint);
+
+        assertEquals(25, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(2, testObject.getBidirectionalEdgeMap().get(bottomRightCornerPoint).size());
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomRightCornerPoint).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomRightCornerPoint).containsKey(Direction.UP));
+    }
+
     private void fillWeightsUpToBottomRow() {
         testObject.addTopLeftCornerEdgesToEdgeMap(new Point(0, 0));
 
@@ -372,6 +422,5 @@ public class SpanningTreeTest {
         for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
             testObject.addRightEdges(new Point(4, i));
         }
-
     }
 }

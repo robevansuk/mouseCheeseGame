@@ -229,4 +229,25 @@ public class SpanningTree {
 
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
     }
+
+    public void addBottomEdges(Point point) {
+        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
+        Point nodeAbove = offsetPoint(point, Direction.UP);
+        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
+        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
+        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
+        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
+
+        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    }
+
+    public void addBottomRightCornerEdges(Point point) {
+        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
+        Point nodeAbove = offsetPoint(point, Direction.UP);
+        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
+        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
+        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
+
+        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    }
 }
