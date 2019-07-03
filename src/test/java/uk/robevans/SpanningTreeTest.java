@@ -200,31 +200,31 @@ public class SpanningTreeTest {
     public void shouldAdd3EdgesForEachTopEdgeThatIsNotACorner() {
         Point topLeftCornerPoint = new Point(0,0);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
-        Point topEdge1 = new Point(1, 0);
-        Point topEdge2 = new Point(2, 0);
-        Point topEdge3 = new Point(3, 0);
+        Point topPoint1 = new Point(1, 0);
+        Point topPoint2 = new Point(2, 0);
+        Point topPoint3 = new Point(3, 0);
 
-        testObject.addTopEdges(topEdge1);
-        testObject.addTopEdges(topEdge2);
-        testObject.addTopEdges(topEdge3);
+        testObject.addTopEdges(topPoint1);
+        testObject.addTopEdges(topPoint2);
+        testObject.addTopEdges(topPoint3);
 
         // 1 entry for the point with 2 directions to navigate to
         assertEquals(4, testObject.getBidirectionalEdgeMap().size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topEdge1).size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topEdge2).size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topEdge3).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topPoint1).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topPoint2).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(topPoint3).size());
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge1).containsKey(Direction.LEFT));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge1).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge1).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint1).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint1).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint1).containsKey(Direction.RIGHT));
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge2).containsKey(Direction.LEFT));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge2).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge2).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint2).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint2).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint2).containsKey(Direction.RIGHT));
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge3).containsKey(Direction.LEFT));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge3).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(topEdge3).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint3).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint3).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(topPoint3).containsKey(Direction.RIGHT));
     }
 
     @Test
@@ -249,30 +249,54 @@ public class SpanningTreeTest {
     public void shouldAdd3EdgesForEachLeftEdgeThatIsNotACorner() {
         Point topLeftCornerPoint = new Point(0,0);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
-        Point leftEdge1 = new Point(0, 1);
-        Point leftEdge2 = new Point(0, 2);
-        Point leftEdge3 = new Point(0, 3);
+        Point leftPoint1 = new Point(0, 1);
+        Point leftPoint2 = new Point(0, 2);
+        Point leftPoint3 = new Point(0, 3);
 
-        testObject.addLeftEdges(leftEdge1);
-        testObject.addLeftEdges(leftEdge2);
-        testObject.addLeftEdges(leftEdge3);
+        testObject.addLeftEdges(leftPoint1);
+        testObject.addLeftEdges(leftPoint2);
+        testObject.addLeftEdges(leftPoint3);
 
-        // 1 entry for the point with 2 directions to navigate to
         assertEquals(4, testObject.getBidirectionalEdgeMap().size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftEdge1).size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftEdge2).size());
-        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftEdge3).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftPoint1).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftPoint2).size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(leftPoint3).size());
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge1).containsKey(Direction.UP));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge1).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge1).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint1).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint1).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint1).containsKey(Direction.RIGHT));
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge2).containsKey(Direction.UP));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge2).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge2).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint2).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint2).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint2).containsKey(Direction.RIGHT));
 
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge3).containsKey(Direction.UP));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge3).containsKey(Direction.DOWN));
-        assertTrue(testObject.getBidirectionalEdgeMap().get(leftEdge3).containsKey(Direction.RIGHT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint3).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint3).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(leftPoint3).containsKey(Direction.RIGHT));
+    }
+
+    @Test
+    public void shouldAdd4EdgesForACentreCellWithEntriesForAll4Directions() {
+        Point topLeftCornerPoint = new Point(0,0);
+        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        Point topPoint1 = new Point(1, 0);
+        testObject.addTopEdges(topPoint1);
+        Point leftPoint1 = new Point(0, 1);
+        Point leftPoint2 = new Point(0, 2);
+        Point leftPoint3 = new Point(0, 3);
+        testObject.addLeftEdges(leftPoint1);
+        testObject.addLeftEdges(leftPoint2);
+        testObject.addLeftEdges(leftPoint3);
+
+        Point centralPoint = new Point(1, 1);
+        testObject.addCentrePointEdges(centralPoint);
+
+        assertEquals(6, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(4, testObject.getBidirectionalEdgeMap().get(centralPoint).size());
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.LEFT));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.RIGHT));
     }
 }

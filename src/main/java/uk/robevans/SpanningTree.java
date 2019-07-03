@@ -200,4 +200,16 @@ public class SpanningTree {
     public boolean isBottomEdgeOnly(Point point, String[][] cells) {
         return point.x != 0 && point.x != (cells[0].length - 1) && point.y == (cells.length - 1);
     }
+
+    public void addCentrePointEdges(Point point) {
+        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
+        Point nodeAbove = offsetPoint(point, Direction.UP);
+        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
+        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
+        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
+        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
+        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
+
+        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    }
 }
