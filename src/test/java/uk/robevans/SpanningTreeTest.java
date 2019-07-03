@@ -126,6 +126,16 @@ public class SpanningTreeTest {
     }
 
     @Test
+    public void isBottomEdgeShouldReturnTrueForBottomEdgesOnly() {
+        assertTrue(testObject.isBottomEdgeOnly(new Point(1, 4), TEST_MATRIX));
+        assertTrue(testObject.isBottomEdgeOnly(new Point(2, 4), TEST_MATRIX));
+        assertTrue(testObject.isBottomEdgeOnly(new Point(3, 4), TEST_MATRIX));
+
+        assertFalse(testObject.isBottomEdgeOnly(new Point(0, 4), TEST_MATRIX));
+        assertFalse(testObject.isBottomEdgeOnly(new Point(4, 4), TEST_MATRIX));
+    }
+
+    @Test
     public void isBottomRightCornerShouldReturnTrueForBottomRightCornerOnly() {
         assertTrue(testObject.isBottomRightCorner(new Point(4, 4), TEST_MATRIX));
         assertFalse(testObject.isBottomRightCorner(new Point(4, 3), TEST_MATRIX));

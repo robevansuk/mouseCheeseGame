@@ -95,7 +95,9 @@ public class SpanningTree {
                     addLeftEdges(point);
                 } else if (isRightEdgeOnly(point, cells)) {
 
-                } else { // bottom edge only
+                } else if (isBottomEdgeOnly(point, cells)) {
+
+                } else { // somewhere in the middle - not an edge/corner
 
                 }
             }
@@ -103,13 +105,12 @@ public class SpanningTree {
     }
 
 
-
     public boolean isRightEdgeOnly(Point point, String[][] cells) {
         return point.x == (cells[0].length - 1) && point.y != 0 && point.y != (cells.length - 1);
     }
 
     public boolean isLeftEdgeOnly(Point point, String[][] cells) {
-        return point.x == 0 && point.y != 0 && point.y != (cells.length-1);
+        return point.x == 0 && point.y != 0 && point.y != (cells.length - 1);
     }
 
     public boolean isBottomRightCorner(Point point, String[][] cells) {
@@ -194,5 +195,9 @@ public class SpanningTree {
         permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
 
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    }
+
+    public boolean isBottomEdgeOnly(Point point, String[][] cells) {
+        return point.x != 0 && point.x != (cells[0].length - 1) && point.y == (cells.length - 1);
     }
 }
