@@ -184,7 +184,7 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldAdd2EdgesForTopLeftCorner() {
-        Point topLeftCornerPoint = new Point(0,0);
+        Point topLeftCornerPoint = new Point(0, 0);
 
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
 
@@ -198,7 +198,7 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldAdd3EdgesForEachTopEdgeThatIsNotACorner() {
-        Point topLeftCornerPoint = new Point(0,0);
+        Point topLeftCornerPoint = new Point(0, 0);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
         Point topPoint1 = new Point(1, 0);
         Point topPoint2 = new Point(2, 0);
@@ -230,7 +230,7 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd2EdgesForTopRightCorner() {
         Point topLeftCornerPoint = new Point(0, 0);
-        Point topRightCornerPoint = new Point(0,4);
+        Point topRightCornerPoint = new Point(0, 4);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
         testObject.addTopEdges(new Point(1, 0));
         testObject.addTopEdges(new Point(2, 0));
@@ -247,7 +247,7 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldAdd3EdgesForEachLeftEdgeThatIsNotACorner() {
-        Point topLeftCornerPoint = new Point(0,0);
+        Point topLeftCornerPoint = new Point(0, 0);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
         Point leftPoint1 = new Point(0, 1);
         Point leftPoint2 = new Point(0, 2);
@@ -277,7 +277,7 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldAdd4EdgesForACentreCellWithEntriesForAll4Directions() {
-        Point topLeftCornerPoint = new Point(0,0);
+        Point topLeftCornerPoint = new Point(0, 0);
         testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
         Point topPoint1 = new Point(1, 0);
         testObject.addTopEdges(topPoint1);
@@ -298,5 +298,80 @@ public class SpanningTreeTest {
         assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.DOWN));
         assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.LEFT));
         assertTrue(testObject.getBidirectionalEdgeMap().get(centralPoint).containsKey(Direction.RIGHT));
+    }
+
+    @Test
+    public void shouldAdd3EdgesForARightHandSideCellWithEntriesForUpDownAndLeft() {
+        Point topLeftCornerPoint = new Point(0, 0);
+        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        Point topPoint1 = new Point(1, 0);
+        Point topPoint2 = new Point(2, 0);
+        Point topPoint3 = new Point(3, 0);
+        testObject.addTopEdges(topPoint1);
+        testObject.addTopEdges(topPoint2);
+        testObject.addTopEdges(topPoint3);
+        Point topRightCorner = new Point(4, 0);
+        testObject.addTopRightCornerEdgesToEdgeMap(topRightCorner);
+        Point leftPoint1 = new Point(0, 1);
+        Point leftPoint2 = new Point(0, 2);
+        Point leftPoint3 = new Point(0, 3);
+        testObject.addLeftEdges(leftPoint1);
+        testObject.addLeftEdges(leftPoint2);
+        testObject.addLeftEdges(leftPoint3);
+        Point centralPoint1 = new Point(1, 1);
+        Point centralPoint2 = new Point(2, 1);
+        Point centralPoint3 = new Point(3, 1);
+        testObject.addCentrePointEdges(centralPoint1);
+        testObject.addCentrePointEdges(centralPoint2);
+        testObject.addCentrePointEdges(centralPoint3);
+
+        Point rightEdge = new Point(4, 1);
+        testObject.addRightEdges(rightEdge);
+
+        assertEquals(12, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(3, testObject.getBidirectionalEdgeMap().get(rightEdge).size());
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(rightEdge).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(rightEdge).containsKey(Direction.DOWN));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(rightEdge).containsKey(Direction.LEFT));
+    }
+
+    @Test
+    public void shouldAdd2EdgesForABottomLeftCorner() {
+        fillWeightsUpToBottomRow();
+
+        Point bottomLeftCornerPoint = new Point(0, 4);
+        testObject.addBottomLeftCornerEdges(bottomLeftCornerPoint);
+
+        assertEquals(21, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(2, testObject.getBidirectionalEdgeMap().get(bottomLeftCornerPoint).size());
+
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomLeftCornerPoint).containsKey(Direction.UP));
+        assertTrue(testObject.getBidirectionalEdgeMap().get(bottomLeftCornerPoint).containsKey(Direction.RIGHT));
+    }
+
+    private void fillWeightsUpToBottomRow() {
+        testObject.addTopLeftCornerEdgesToEdgeMap(new Point(0, 0));
+
+        for (int i = 1; i < TEST_MATRIX[0].length - 1; i++) {
+            testObject.addTopEdges(new Point(i, 0));
+        }
+
+        testObject.addTopRightCornerEdgesToEdgeMap(new Point(4, 0));
+
+        for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
+            testObject.addLeftEdges(new Point(0, i));
+        }
+
+        for (int i = 1; i < TEST_MATRIX[0].length - 1; i++) {
+            testObject.addCentrePointEdges(new Point(i, 1));
+            testObject.addCentrePointEdges(new Point(i, 2));
+            testObject.addCentrePointEdges(new Point(i, 3));
+        }
+
+        for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
+            testObject.addRightEdges(new Point(4, i));
+        }
+
     }
 }
