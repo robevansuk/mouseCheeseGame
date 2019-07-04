@@ -65,10 +65,10 @@ public class SpanningTree {
     }
 
     private boolean isEdgePoint(Point point, String[][] cells) {
-        return point.x == 0
-                || point.y == 0
+        return isFirstCol(point.x)
+                || isTopRow(point)
                 || isLastCol(point, cells)
-                || point.y == cells.length - 1;
+                || isBottomRow(point, cells);
     }
 
     /**
@@ -108,19 +108,23 @@ public class SpanningTree {
     }
 
     public boolean isRightEdgeOnly(Point point, String[][] cells) {
-        return point.x == (cells[0].length - 1) && point.y != 0 && point.y != (cells.length - 1);
+        return isLastCol(point, cells) && !isTopRow(point) && !isBottomRow(point, cells);
     }
 
     public boolean isLeftEdgeOnly(Point point, String[][] cells) {
-        return point.x == 0 && point.y != 0 && point.y != (cells.length - 1);
+        return isFirstCol(point.x) && !isTopRow(point) && !isBottomRow(point, cells);
     }
 
     public boolean isBottomRightCorner(Point point, String[][] cells) {
-        return point.x == (cells[0].length - 1) && point.y == (cells.length - 1);
+        return isLastCol(point, cells) && isBottomRow(point, cells);
+    }
+
+    private boolean isBottomRow(Point point, String[][] cells) {
+        return point.y == (cells.length - 1);
     }
 
     public boolean isBottomLeftCorner(Point point, String[][] cells) {
-        return point.x == 0 && point.y == cells.length - 1;
+        return isFirstCol(point.x) && isBottomRow(point, cells);
     }
 
     public Point offsetPoint(Point point, Direction direction) {
@@ -128,19 +132,27 @@ public class SpanningTree {
     }
 
     private boolean isTopEdgeOnly(Point point, String[][] cells) {
-        return point.y == 0 && point.x != 0 && !isLastCol(point, cells);
+        return isTopRow(point) && !isFirstCol(point.x) && !isLastCol(point, cells);
+    }
+
+    private boolean isTopRow(Point point) {
+        return point.y == 0;
+    }
+
+    public boolean isTopRightCorner(Point point, String[][] cells) {
+        return isTopRow(point) && isLastCol(point, cells);
+    }
+
+    public boolean isTopLeftCorner(Point point) {
+        return isFirstCol(point.x) && isTopRow(point);
+    }
+
+    private boolean isFirstCol(int x) {
+        return x == 0;
     }
 
     public boolean isLastCol(Point point, String[][] cells) {
         return point.x == cells[0].length - 1;
-    }
-
-    public boolean isTopRightCorner(Point point, String[][] cells) {
-        return point.y == 0 && isLastCol(point, cells);
-    }
-
-    public boolean isTopLeftCorner(Point point) {
-        return point.x == 0 && point.y == 0;
     }
 
     public void addTopLeftCornerEdges(Point point) {
@@ -206,7 +218,7 @@ public class SpanningTree {
     }
 
     public boolean isBottomEdgeOnly(Point point, String[][] cells) {
-        return point.x != 0 && point.x != (cells[0].length - 1) && point.y == (cells.length - 1);
+        return point.x != 0 && point.x != (cells[0].length - 1) && isBottomRow(point, cells);
     }
 
     public void addCentrePointEdges(Point point) {
