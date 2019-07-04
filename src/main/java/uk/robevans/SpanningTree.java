@@ -255,6 +255,7 @@ public class SpanningTree {
 
     public void visit(Point point) {
         visitedNodes.add(point);
+        nodesToProcess.remove(point);
     }
 
     public List<Point> getVisitedNodes() {

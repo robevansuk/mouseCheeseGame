@@ -430,4 +430,10 @@ public class SpanningTreeTest {
 
         assertEquals(1, testObject.getVisitedNodes().size());
     }
+
+    @Test
+    public void shouldRemoveFirstNodeFromNodesLeftToVisitWhenVisitNodeIsCalled() {
+        testObject.visit(new Point(0, 0));
+        assertEquals(24, testObject.getPointsToProcess().size());
+    }
 }
