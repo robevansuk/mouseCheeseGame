@@ -10,7 +10,6 @@ import java.util.Random;
 
 import static java.util.stream.Collectors.toList;
 import static uk.robevans.Direction.*;
-import static uk.robevans.Direction.UP;
 
 public class SpanningTree {
 
@@ -267,11 +266,11 @@ public class SpanningTree {
         Map<Direction, Integer> directionsToDistanceMap = bidirectionalEdgeMap.get(point);
         List<Direction> permittedDirections = directionsToDistanceMap.keySet().stream().collect(toList());
         Direction nearestNodeDirection = null;
-        for (int i=0; i<permittedDirections.size(); i++) {
+        for (int i = 0; i < permittedDirections.size(); i++) {
             Direction directionBeingReviewed = permittedDirections.get(i);
             if (nearestNodeDirection == null) {
                 nearestNodeDirection = directionBeingReviewed;
-            } else if (directionsToDistanceMap.get(nearestNodeDirection)>directionsToDistanceMap.get(directionBeingReviewed)){
+            } else if (directionsToDistanceMap.get(nearestNodeDirection) > directionsToDistanceMap.get(directionBeingReviewed)) {
                 nearestNodeDirection = directionBeingReviewed;
             }
         }
