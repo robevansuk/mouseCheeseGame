@@ -423,4 +423,11 @@ public class SpanningTreeTest {
             testObject.addRightEdges(new Point(4, i));
         }
     }
+
+    @Test
+    public void shouldAddFirstNodeToVisitedNodeWhenVisitIsCalled() {
+        testObject.visit(new Point(0, 0));
+
+        assertEquals(1, testObject.getVisitedNodes().size());
+    }
 }

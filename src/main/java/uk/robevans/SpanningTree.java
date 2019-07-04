@@ -250,4 +250,12 @@ public class SpanningTree {
 
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
     }
+
+    public void visit(Point point) {
+        nodesToProcess.add(point);
+    }
+
+    public List<Point> getVisitedNodes() {
+        return nodesToProcess;
+    }
 }
