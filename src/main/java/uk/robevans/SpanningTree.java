@@ -11,6 +11,7 @@ public class SpanningTree {
 
     private final List<Point> processedNodes;
     private final List<Point> nodesToProcess;
+    private final List<Point> visitedNodes;
     private final Map<Point, Map<Direction, Integer>> bidirectionalEdgeMap;
     private final Map<Point, List<Point>> mazePaths;
     private final Random random;
@@ -20,6 +21,7 @@ public class SpanningTree {
         this.processedNodes = new ArrayList<>();
         this.nodesToProcess = new ArrayList<>();
         this.bidirectionalEdgeMap = new HashMap<>();
+        this.visitedNodes = new ArrayList<>();
         this.mazePaths = new HashMap<>();
         random = new Random();
     }
@@ -252,10 +254,10 @@ public class SpanningTree {
     }
 
     public void visit(Point point) {
-        nodesToProcess.add(point);
+        visitedNodes.add(point);
     }
 
     public List<Point> getVisitedNodes() {
-        return nodesToProcess;
+        return visitedNodes;
     }
 }
