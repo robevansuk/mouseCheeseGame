@@ -2,12 +2,15 @@ package uk.robevans;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import static java.util.stream.Collectors.toList;
+import static uk.robevans.Direction.*;
+import static uk.robevans.Direction.UP;
 
 public class SpanningTree {
 
@@ -155,42 +158,6 @@ public class SpanningTree {
         return point.x == cells[0].length - 1;
     }
 
-    public void addTopLeftCornerEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
-    }
-
-    public void addTopEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
-    }
-
-    public void addTopRightCornerEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
-    }
-
-    public void addBottomLeftCornerEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
-    }
-
     public List<Point> getAllTreeNodes() {
         return nodesToProcess;
     }
@@ -209,10 +176,10 @@ public class SpanningTree {
 
     public void addLeftEdges(Point point) {
         Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
+        Point nodeAbove = offsetPoint(point, UP);
+        permittedWeightedDirections.put(UP, bidirectionalEdgeMap.get(nodeAbove).get(DOWN));
+        permittedWeightedDirections.put(DOWN, random.nextInt());
+        permittedWeightedDirections.put(RIGHT, random.nextInt());
 
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
     }
@@ -221,48 +188,62 @@ public class SpanningTree {
         return point.x != 0 && point.x != (cells[0].length - 1) && isBottomRow(point, cells);
     }
 
-    public void addCentrePointEdges(Point point) {
+    public void addEdges(Point point, List<Direction> directions) {
         Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
+
+        Point nodeAbove = offsetPoint(point, UP);
+        Point nodeToLeft = offsetPoint(point, LEFT);
+
+        for (Direction direction : directions) {
+            switch (direction) {
+                case UP:
+                    permittedWeightedDirections.put(UP, bidirectionalEdgeMap.get(nodeAbove).get(DOWN));
+                    break;
+                case DOWN:
+                    permittedWeightedDirections.put(DOWN, random.nextInt());
+                    break;
+                case LEFT:
+                    permittedWeightedDirections.put(LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(RIGHT));
+                    break;
+                case RIGHT:
+                    permittedWeightedDirections.put(RIGHT, random.nextInt());
+                    break;
+            }
+        }
 
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    }
+
+    public void addCentrePointEdges(Point point) {
+        addEdges(point, Arrays.asList(Direction.values()));
     }
 
     public void addRightEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+        addEdges(point, Arrays.asList(UP, DOWN, LEFT));
     }
 
     public void addBottomEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
-        permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
-
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+        addEdges(point, Arrays.asList(UP, LEFT, RIGHT));
     }
 
     public void addBottomRightCornerEdges(Point point) {
-        Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
-        Point nodeAbove = offsetPoint(point, Direction.UP);
-        Point nodeToLeft = offsetPoint(point, Direction.LEFT);
-        permittedWeightedDirections.put(Direction.UP, bidirectionalEdgeMap.get(nodeAbove).get(Direction.DOWN));
-        permittedWeightedDirections.put(Direction.LEFT, bidirectionalEdgeMap.get(nodeToLeft).get(Direction.RIGHT));
+        addEdges(point, Arrays.asList(UP, LEFT));
+    }
 
-        bidirectionalEdgeMap.put(point, permittedWeightedDirections);
+    public void addTopLeftCornerEdges(Point point) {
+        addEdges(point, Arrays.asList(DOWN, RIGHT));
+    }
+
+    public void addTopEdges(Point point) {
+        addEdges(point, Arrays.asList(DOWN, LEFT, RIGHT));
+    }
+
+    public void addTopRightCornerEdges(Point point) {
+        addEdges(point, Arrays.asList(DOWN, LEFT));
+    }
+
+    public void addBottomLeftCornerEdges(Point point) {
+        addEdges(point, Arrays.asList(UP, RIGHT));
     }
 
     public void visit(Point point) {
