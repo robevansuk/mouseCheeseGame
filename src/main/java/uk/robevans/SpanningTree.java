@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static java.util.stream.Collectors.toList;
+
 public class SpanningTree {
 
     private final List<Point> processedNodes;
     private final List<Point> nodesToProcess;
     private final List<Point> visitedNodes;
+    private final List<Point> unvisitedNeighbouringNodes;
     private final Map<Point, Map<Direction, Integer>> bidirectionalEdgeMap;
     private final Map<Point, List<Point>> mazePaths;
     private final Random random;
@@ -22,6 +25,7 @@ public class SpanningTree {
         this.nodesToProcess = new ArrayList<>();
         this.bidirectionalEdgeMap = new HashMap<>();
         this.visitedNodes = new ArrayList<>();
+        this.unvisitedNeighbouringNodes = new ArrayList<>();
         this.mazePaths = new HashMap<>();
         random = new Random();
     }
@@ -30,7 +34,6 @@ public class SpanningTree {
         resetState();
 
         addAllNodesToProcessingList(cells);
-//        initEdgeMap(cells);
     }
 
     public void resetState() {
@@ -38,6 +41,9 @@ public class SpanningTree {
         nodesToProcess.clear();
         bidirectionalEdgeMap.clear();
         mazePaths.clear();
+        visitedNodes.clear();
+        unvisitedNeighbouringNodes.clear();
+        bidirectionalEdgeMap.clear();
     }
 
     private void addAllNodesToProcessingList(String[][] cells) {
@@ -53,7 +59,6 @@ public class SpanningTree {
 
         // starting point does not matter here - we will always get the minimal graph regardless of where we start
         // We'll start by going in reverse order so we are always looking at the tail of the array...
-//        initEdgeMap(cells);
 
 
         return this;
@@ -81,31 +86,26 @@ public class SpanningTree {
                 Point point = new Point(row, col);
                 if (isTopLeftCorner(point)) {
                     addTopLeftCornerEdges(point);
-
                 } else if (isTopRightCorner(point, cells)) {
                     addTopRightCornerEdges(point);
-
                 } else if (isTopEdgeOnly(point, cells)) {
                     addTopEdges(point);
-
                 } else if (isBottomLeftCorner(point, cells)) {
                     addBottomLeftCornerEdges(point);
-
                 } else if (isBottomRightCorner(point, cells)) {
-
+                    addBottomRightCornerEdges(point);
                 } else if (isLeftEdgeOnly(point, cells)) {
                     addLeftEdges(point);
                 } else if (isRightEdgeOnly(point, cells)) {
-
+                    addRightEdges(point);
                 } else if (isBottomEdgeOnly(point, cells)) {
-
+                    addBottomEdges(point);
                 } else { // somewhere in the middle - not an edge/corner
-
+                    addCentrePointEdges(point);
                 }
             }
         }
     }
-
 
     public boolean isRightEdgeOnly(Point point, String[][] cells) {
         return point.x == (cells[0].length - 1) && point.y != 0 && point.y != (cells.length - 1);
@@ -256,9 +256,36 @@ public class SpanningTree {
     public void visit(Point point) {
         visitedNodes.add(point);
         nodesToProcess.remove(point);
+        bidirectionalEdgeMap.get(point).keySet().stream()
+                .forEach(direction -> {
+                    Point aPoint = offsetPoint(point, direction);
+                    if (!visitedNodes.contains(aPoint)) {
+                        unvisitedNeighbouringNodes.add(aPoint);
+                    }
+                });
     }
 
     public List<Point> getVisitedNodes() {
         return visitedNodes;
+    }
+
+    public void visitNextClosestNodeThatHasNotAlreadyBeenVisited(Point point) {
+        // get validDirections from input point
+        Map<Direction, Integer> directionsToDistanceMap = bidirectionalEdgeMap.get(point);
+        List<Direction> permittedDirections = directionsToDistanceMap.keySet().stream().collect(toList());
+        Direction nearestNodeDirection = null;
+        for (int i=0; i<permittedDirections.size(); i++) {
+            Direction directionBeingReviewed = permittedDirections.get(i);
+            if (nearestNodeDirection == null) {
+                nearestNodeDirection = directionBeingReviewed;
+            } else if (directionsToDistanceMap.get(nearestNodeDirection)>directionsToDistanceMap.get(directionBeingReviewed)){
+                nearestNodeDirection = directionBeingReviewed;
+            }
+        }
+        visit(offsetPoint(point, nearestNodeDirection));
+    }
+
+    public List<Point> getUnvisitedNeighbouringNodes() {
+        return unvisitedNeighbouringNodes;
     }
 }

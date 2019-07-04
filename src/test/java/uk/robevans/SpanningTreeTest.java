@@ -428,6 +428,8 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldAddFirstNodeToVisitedNodeWhenVisitIsCalled() {
+        createFullyConnectedGraph();
+
         testObject.visit(new Point(0, 0));
 
         assertEquals(1, testObject.getVisitedNodes().size());
@@ -435,8 +437,20 @@ public class SpanningTreeTest {
 
     @Test
     public void shouldRemoveFirstNodeFromNodesLeftToVisitWhenVisitNodeIsCalled() {
+        createFullyConnectedGraph();
+
         testObject.visit(new Point(0, 0));
+
         assertEquals(24, testObject.getPointsToProcess().size());
+    }
+
+    @Test
+    public void addingANodeShouldAddTheCompleteListOfNowAccessibleButUnconnectedNodes() {
+        createFullyConnectedGraph();
+
+        testObject.visit(new Point(0, 0));
+
+        assertEquals(2, testObject.getUnvisitedNeighbouringNodes().size());
     }
 
     @Test
@@ -450,11 +464,12 @@ public class SpanningTreeTest {
             closestDirection = Direction.DOWN;
         }
         Point nearestPoint = testObject.offsetPoint(topLeftCorner, closestDirection);
-
         testObject.visit(topLeftCorner);
 
-        List<Point> pointsToProcess = testObject.getPointsToProcess();
-        Point lastPointToProcess = pointsToProcess.get(pointsToProcess.size() - 1);
+        testObject.visitNextClosestNodeThatHasNotAlreadyBeenVisited(topLeftCorner);
+
+        List<Point> visitedNodes = testObject.getVisitedNodes();
+        Point lastPointToProcess = visitedNodes.get(visitedNodes.size() - 1);
         assertEquals(nearestPoint, lastPointToProcess);
     }
 
