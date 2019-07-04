@@ -80,10 +80,10 @@ public class SpanningTree {
             for (int col = 0; col < cells[0].length; col++) {
                 Point point = new Point(row, col);
                 if (isTopLeftCorner(point)) {
-                    addTopLeftCornerEdgesToEdgeMap(point);
+                    addTopLeftCornerEdges(point);
 
                 } else if (isTopRightCorner(point, cells)) {
-                    addTopRightCornerEdgesToEdgeMap(point);
+                    addTopRightCornerEdges(point);
 
                 } else if (isTopEdgeOnly(point, cells)) {
                     addTopEdges(point);
@@ -143,7 +143,7 @@ public class SpanningTree {
         return point.x == 0 && point.y == 0;
     }
 
-    public void addTopLeftCornerEdgesToEdgeMap(Point point) {
+    public void addTopLeftCornerEdges(Point point) {
         Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
         permittedWeightedDirections.put(Direction.DOWN, random.nextInt());
         permittedWeightedDirections.put(Direction.RIGHT, random.nextInt());
@@ -161,7 +161,7 @@ public class SpanningTree {
         bidirectionalEdgeMap.put(point, permittedWeightedDirections);
     }
 
-    public void addTopRightCornerEdgesToEdgeMap(Point point) {
+    public void addTopRightCornerEdges(Point point) {
         Map<Direction, Integer> permittedWeightedDirections = new HashMap<>();
         Point nodeToLeft = offsetPoint(point, Direction.LEFT);
         permittedWeightedDirections.put(Direction.DOWN, random.nextInt());

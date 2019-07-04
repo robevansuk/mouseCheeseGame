@@ -46,6 +46,8 @@ public class SpanningTreeTest {
 
     @Test
     public void thereShouldBeTheSameNumberOfEdgeEntriesInTheEdgeMapAsNodesInTheSpanningTree() {
+        createFullyConnectedGraph();
+
         Map<Point, Map<Direction, Integer>> edgeEntries = testObject.getBidirectionalEdgeMap();
 
         assertEquals(25, edgeEntries.size());
@@ -186,7 +188,7 @@ public class SpanningTreeTest {
     public void shouldAdd2EdgesForTopLeftCorner() {
         Point topLeftCornerPoint = new Point(0, 0);
 
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
 
         // 1 entry for the point with 2 directions to navigate to
         assertEquals(1, testObject.getBidirectionalEdgeMap().size());
@@ -199,7 +201,7 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd3EdgesForEachTopEdgeThatIsNotACorner() {
         Point topLeftCornerPoint = new Point(0, 0);
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
         Point topPoint1 = new Point(1, 0);
         Point topPoint2 = new Point(2, 0);
         Point topPoint3 = new Point(3, 0);
@@ -230,16 +232,16 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd2EdgesForTopRightCorner() {
         Point topLeftCornerPoint = new Point(0, 0);
-        Point topRightCornerPoint = new Point(0, 4);
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        Point topRightCornerPoint = new Point(4, 0);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
         testObject.addTopEdges(new Point(1, 0));
         testObject.addTopEdges(new Point(2, 0));
         testObject.addTopEdges(new Point(3, 0));
 
-        testObject.addTopRightCornerEdgesToEdgeMap(topRightCornerPoint);
+        testObject.addTopRightCornerEdges(topRightCornerPoint);
 
         // 1 entry for the point with 2 directions to navigate to
-        assertEquals(1, testObject.getBidirectionalEdgeMap().size());
+        assertEquals(5, testObject.getBidirectionalEdgeMap().size());
         assertEquals(2, testObject.getBidirectionalEdgeMap().get(topRightCornerPoint).size());
         assertTrue(testObject.getBidirectionalEdgeMap().get(topRightCornerPoint).containsKey(Direction.DOWN));
         assertTrue(testObject.getBidirectionalEdgeMap().get(topRightCornerPoint).containsKey(Direction.LEFT));
@@ -248,7 +250,7 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd3EdgesForEachLeftEdgeThatIsNotACorner() {
         Point topLeftCornerPoint = new Point(0, 0);
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
         Point leftPoint1 = new Point(0, 1);
         Point leftPoint2 = new Point(0, 2);
         Point leftPoint3 = new Point(0, 3);
@@ -278,7 +280,7 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd4EdgesForACentreCellWithEntriesForAll4Directions() {
         Point topLeftCornerPoint = new Point(0, 0);
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
         Point topPoint1 = new Point(1, 0);
         testObject.addTopEdges(topPoint1);
         Point leftPoint1 = new Point(0, 1);
@@ -303,7 +305,7 @@ public class SpanningTreeTest {
     @Test
     public void shouldAdd3EdgesForARightHandSideCellWithEntriesForUpDownAndLeft() {
         Point topLeftCornerPoint = new Point(0, 0);
-        testObject.addTopLeftCornerEdgesToEdgeMap(topLeftCornerPoint);
+        testObject.addTopLeftCornerEdges(topLeftCornerPoint);
         Point topPoint1 = new Point(1, 0);
         Point topPoint2 = new Point(2, 0);
         Point topPoint3 = new Point(3, 0);
@@ -311,7 +313,7 @@ public class SpanningTreeTest {
         testObject.addTopEdges(topPoint2);
         testObject.addTopEdges(topPoint3);
         Point topRightCorner = new Point(4, 0);
-        testObject.addTopRightCornerEdgesToEdgeMap(topRightCorner);
+        testObject.addTopRightCornerEdges(topRightCorner);
         Point leftPoint1 = new Point(0, 1);
         Point leftPoint2 = new Point(0, 2);
         Point leftPoint3 = new Point(0, 3);
@@ -401,13 +403,13 @@ public class SpanningTreeTest {
     }
 
     private void fillWeightsUpToBottomRow() {
-        testObject.addTopLeftCornerEdgesToEdgeMap(new Point(0, 0));
+        testObject.addTopLeftCornerEdges(new Point(0, 0));
 
         for (int i = 1; i < TEST_MATRIX[0].length - 1; i++) {
             testObject.addTopEdges(new Point(i, 0));
         }
 
-        testObject.addTopRightCornerEdgesToEdgeMap(new Point(4, 0));
+        testObject.addTopRightCornerEdges(new Point(4, 0));
 
         for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
             testObject.addLeftEdges(new Point(0, i));
@@ -435,5 +437,50 @@ public class SpanningTreeTest {
     public void shouldRemoveFirstNodeFromNodesLeftToVisitWhenVisitNodeIsCalled() {
         testObject.visit(new Point(0, 0));
         assertEquals(24, testObject.getPointsToProcess().size());
+    }
+
+    @Test
+    public void addFirstEdgeAndConnectedNodeToMSTAndVisitedNodesByPickingTheOneWithTheShortestDistanceToTheNodeToProcess() {
+        // Could mock generating the min distance for one of the edges to clean up this test but this more lengthy version also works
+        createFullyConnectedGraph();
+        Point topLeftCorner = new Point(0, 0);
+        Map<Direction, Integer> directionalDistancesMap = testObject.getBidirectionalEdgeMap().get(topLeftCorner);
+        Direction closestDirection = Direction.RIGHT;
+        if (directionalDistancesMap.get(Direction.DOWN) <= directionalDistancesMap.get(Direction.RIGHT)) {
+            closestDirection = Direction.DOWN;
+        }
+        Point nearestPoint = testObject.offsetPoint(topLeftCorner, closestDirection);
+
+        testObject.visit(topLeftCorner);
+
+        List<Point> pointsToProcess = testObject.getPointsToProcess();
+        Point lastPointToProcess = pointsToProcess.get(pointsToProcess.size() - 1);
+        assertEquals(nearestPoint, lastPointToProcess);
+    }
+
+    private void createFullyConnectedGraph() {
+        testObject.addTopLeftCornerEdges(new Point(0, 0));
+        for (int i = 1; i < TEST_MATRIX[0].length - 1; i++) {
+            testObject.addTopEdges(new Point(i, 0));
+        }
+        testObject.addTopRightCornerEdges(new Point(4, 0));
+
+        for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
+            testObject.addLeftEdges(new Point(0, i));
+        }
+        for (int i = 1; i < TEST_MATRIX[0].length - 1; i++) {
+            testObject.addCentrePointEdges(new Point(i, 1));
+            testObject.addCentrePointEdges(new Point(i, 2));
+            testObject.addCentrePointEdges(new Point(i, 3));
+        }
+        for (int i = 1; i < TEST_MATRIX.length - 1; i++) {
+            testObject.addRightEdges(new Point(4, i));
+        }
+
+        testObject.addBottomLeftCornerEdges(new Point(0, 4));
+        for(int i=1; i<TEST_MATRIX[0].length - 1; i++) {
+            testObject.addBottomEdges(new Point(i, 4));
+        }
+        testObject.addBottomRightCornerEdges(new Point(4, 4));
     }
 }
