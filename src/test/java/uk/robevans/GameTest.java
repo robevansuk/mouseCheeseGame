@@ -15,8 +15,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GameTest {
 
-    public static final int MAZE_WIDTH = 10;
-    public static final int MAZE_HEIGHT = 15;
+    private static final int MAZE_WIDTH = 10;
+    private static final int MAZE_HEIGHT = 15;
     private Game testObject;
 
     @Mock
@@ -73,9 +73,4 @@ public class GameTest {
         assertEquals(new Point(2, 3), testObject.getMouseLocation());
     }
 
-    @Test
-    public void aSpanningTreeConnectingAllCellsOfTheMazeShouldExist() {
-        SpanningTree newMaze = testObject.createAMaze();
-        assertEquals(spanningTreeMock, newMaze);
-    }
 }
